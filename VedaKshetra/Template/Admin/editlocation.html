@@ -1,0 +1,43 @@
+{% include "Admin/header.html" %}
+
+<main id="main" class="main">
+  <div class="container py-5">
+    <div class="col-lg-8 mx-auto"> <!-- Expanded width for better form appearance -->
+      <div class="card border-0 shadow-lg">
+        <div class="card-body">
+          <h5 class="card-title text-center mb-4">Update Location Details</h5>
+
+          <!-- Location Update Form -->
+          <form class="row g-4" method="post" action="{% url 'editlocation' loc.location_id %}">
+            {% csrf_token %}
+            
+            <div class="col-12">
+              <label for="inputLocationName" class="form-label">Location Name</label>
+              <input type="text" name="txtlocation" class="form-control form-control-lg" 
+                id="inputLocationName" value="{{ loc.location_name }}" 
+                placeholder="Enter the location name" required pattern="[A-Za-z\s]+" 
+                title="Only letters and spaces are allowed">
+            </div>
+
+            <!-- Submit Button -->
+            <div class="col-12 text-center mt-4">
+              <button type="submit" class="btn btn-primary btn-lg w-75 py-3 px-4 shadow-sm border-0 rounded-3 hover-effect">
+                Update Location
+              </button>
+            </div>
+
+            <!-- Reset Button -->
+            <div class="col-12 text-center mt-2">
+              <button type="reset" class="btn btn-secondary btn-lg w-75 py-3 px-4 shadow-sm border-0 rounded-3 hover-effect">
+                Reset
+              </button>
+            </div>
+          </form><!-- Location Update Form -->
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+</div>
+{% include "Admin/footer.html" %}

@@ -1,0 +1,41 @@
+{% include 'Admin/header.html' %}
+
+<div class="container mt-5">
+    <h2 class="text-center text-primary fw-bold">📊 Admin Earnings Log</h2>
+    <div class="card shadow-sm p-4">
+        <div class="text-end mb-3">
+            <h4 class="text-success fw-bold">💰 Total Earnings: ₹{{ total_commission }}</h4>
+        </div>
+
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Booking ID</th>
+                    <th>Customer</th>
+                    <th>Package</th>
+                    <th>Total Amount</th>
+                    <th>1/4 Payment</th>
+                    <th>Admin Commission (5%)</th>
+                    <th>Hospital Amount</th>
+                    <th>Payment Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for earning in earnings %}
+                <tr>
+                    <td>{{ earning.booking_id }}</td>
+                    <td>{{ earning.customer }}</td>
+                    <td>{{ earning.package }}</td>
+                    <td>₹{{ earning.total_amount }}</td>
+                    <td class="text-primary fw-bold">₹{{ earning.quarter_payment }}</td>
+                    <td class="text-danger fw-bold">₹{{ earning.admin_commission }}</td>
+                    <td class="text-success fw-bold">₹{{ earning.hospital_amount }}</td>
+                    <td><span class="badge bg-success">{{ earning.payment_status }}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+{% include 'Admin/footer.html' %}

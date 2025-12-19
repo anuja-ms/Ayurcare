@@ -1,0 +1,83 @@
+{% load static %}
+{% include 'Hospital/header.html' %}
+
+<div class="container mt-5">
+    <h3 class="text-center text-success fw-bold">Edit Package</h3>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-body p-4">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <!-- Package Name -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Package Name</label>
+                            <input type="text" name="package_name" class="form-control border-primary" value="{{ package.package_name }}" required>
+                        </div>
+
+                        <!-- Number of Days -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Number of Days</label>
+                            <input type="number" name="noofdays" class="form-control border-primary" value="{{ package.noofdays }}" required>
+                        </div>
+
+                        <!-- Image Upload -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Upload New Image</label>
+                            <input type="file" name="image" class="form-control border-secondary">
+                            <small class="text-muted">Leave empty if you don't want to change the image.</small>
+                        </div>
+
+                        <!-- Preview Current Image -->
+                        <div class="mb-3 text-center">
+                            <label class="form-label fw-semibold">Current Image</label>
+                            <div class="image-preview">
+                                <img src="{{ package.image.url }}" alt="Current Image" class="img-thumbnail rounded shadow-sm">
+                            </div>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success fw-bold">
+                                <i class="fas fa-save"></i> Update Package
+                            </button>
+                            <a href="{% url 'viewpackage' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'Hospital/footer.html' %}
+
+<!-- Custom CSS -->
+<style>
+    .container {
+        max-width: 1500px;
+    }
+
+    .card {
+        border-radius: 12px;
+    }
+
+    .image-preview img {
+        max-width: 150px;
+        border-radius: 10px;
+        border: 2px solid #ddd;
+    }
+
+    .btn {
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #f8f9fa;
+    }
+</style>

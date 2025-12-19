@@ -1,0 +1,154 @@
+{% load static %}
+{% include 'Customer/header.html' %}
+
+<!-- Payment Section Start -->
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-lg border-0 rounded-lg">
+                <div class="card-body p-4">
+                    <h3 class="text-center text-success fw-bold">💳 Secure Payment for Booking #{{ booking.booking_id }}</h3>
+                    <hr>
+
+                    <!-- Booking Details -->
+                    <div class="mb-4 text-center">
+                        <p class="mb-1"><strong>📅 Booking Date:</strong> {{ booking.booking_date }}</p>
+                        <p class="mb-1 text-primary fw-bold"><strong>💰 Total Amount:</strong> ₹{{ total_amount }}</p>
+                        <p class="mb-1 text-info fw-bold"><strong>💳 Required Payment (1/4):</strong> ₹{{ quarter_payment }}</p>
+                        <p class="mb-1 text-danger fw-bold"><strong>🔹 Admin Commission (5% of 1/4):</strong> ₹{{ admin_commission }}</p>
+                        <p class="mb-1 text-success fw-bold"><strong>🏥 Amount to Hospital:</strong> ₹{{ hospital_amount }}</p>
+                    </div>
+
+                    <form method="POST" id="payment-form">
+                        {% csrf_token %}
+
+                        <!-- Payment Method Selection -->
+                        <div class="mb-3">
+                            <label for="payment_method" class="form-label fw-bold">💳 Select Payment Method</label>
+                            <select class="form-select form-control-lg" id="payment_method" name="payment_method" required>
+                                <option value="">Choose Payment Method</option>
+                                <option value="credit_card">💳 Credit Card</option>
+                                <option value="bank_transfer">🏦 Bank Transfer</option>
+                                <option value="upi">📲 UPI</option>
+                            </select>
+                        </div>
+
+                        <!-- Credit Card Fields -->
+                        <div id="credit_card_fields" class="payment-fields fade-in" style="display:none;">
+                            <div class="card p-3 bg-light">
+                                <h5 class="text-primary fw-bold">💳 Enter Credit Card Details</h5>
+                                <div class="mb-3">
+                                    <label for="card_number" class="form-label">Card Number</label>
+                                    <input type="text" class="form-control" id="card_number" name="card_number" placeholder="1234 5678 9012 3456" maxlength="19">
+                                    <small class="text-danger d-none" id="card_error">Invalid card number</small>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="expiry_date" class="form-label">Expiry Date (MM/YY)</label>
+                                        <input type="text" class="form-control" id="expiry_date" name="expiry_date" placeholder="MM/YY" maxlength="5">
+                                        <small class="text-danger d-none" id="expiry_error">Invalid expiry date</small>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="cvv" class="form-label">CVV</label>
+                                        <input type="text" class="form-control" id="cvv" name="cvv" placeholder="123" maxlength="3">
+                                        <small class="text-danger d-none" id="cvv_error">Invalid CVV</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bank Transfer Fields -->
+                        <div id="bank_transfer_fields" class="payment-fields fade-in" style="display:none;">
+                            <div class="card p-3 bg-light">
+                                <h5 class="text-primary fw-bold">🏦 Bank Transfer Information</h5>
+                                <div class="mb-3">
+                                    <label for="bank_account" class="form-label">Bank Account Number</label>
+                                    <input type="text" class="form-control" id="bank_account" name="bank_account" placeholder="Enter bank account number">
+                                    <small class="text-danger d-none" id="bank_error">Invalid bank account number</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- UPI Payment Fields -->
+                        <div id="upi_fields" class="payment-fields fade-in" style="display:none;">
+                            <div class="card p-3 bg-light">
+                                <h5 class="text-primary fw-bold">📲 UPI Payment</h5>
+                                <div class="mb-3">
+                                    <label for="upi_id" class="form-label">UPI ID</label>
+                                    <input type="text" class="form-control" id="upi_id" name="upi_id" placeholder="example@upi">
+                                    <small class="text-danger d-none" id="upi_error">Invalid UPI ID</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-success w-100 fw-bold shadow">
+                                ✅ Complete Payment of ₹{{ quarter_payment }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Payment Section End -->
+
+{% include 'Customer/footer.html' %}
+
+<!-- JavaScript for Showing Payment Fields with Validation -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll('.payment-fields').forEach(el => el.style.display = 'none');
+
+        document.getElementById('payment_method').addEventListener('change', function () {
+            document.querySelectorAll('.payment-fields').forEach(el => el.style.display = 'none');
+            if (this.value) {
+                document.getElementById(this.value + '_fields').style.display = 'block';
+            }
+        });
+
+        document.getElementById('payment-form').addEventListener('submit', function (e) {
+            let valid = true;
+            document.querySelectorAll('.text-danger').forEach(el => el.classList.add('d-none'));
+
+            let selectedMethod = document.getElementById('payment_method').value;
+
+            if (selectedMethod === 'credit_card') {
+                let cardNumber = document.getElementById('card_number').value.replace(/\s/g, '');
+                let expiryDate = document.getElementById('expiry_date').value;
+                let cvv = document.getElementById('cvv').value;
+
+                if (!/^\d{16}$/.test(cardNumber)) {
+                    document.getElementById('card_error').classList.remove('d-none');
+                    valid = false;
+                }
+                if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(expiryDate)) {
+                    document.getElementById('expiry_error').classList.remove('d-none');
+                    valid = false;
+                }
+                if (!/^\d{3}$/.test(cvv)) {
+                    document.getElementById('cvv_error').classList.remove('d-none');
+                    valid = false;
+                }
+            }
+
+            if (selectedMethod === 'bank_transfer') {
+                if (!/^\d{9,18}$/.test(document.getElementById('bank_account').value)) {
+                    document.getElementById('bank_error').classList.remove('d-none');
+                    valid = false;
+                }
+            }
+
+            if (selectedMethod === 'upi') {
+                if (!/^[a-zA-Z0-9._-]+@[a-zA-Z]+$/.test(document.getElementById('upi_id').value)) {
+                    document.getElementById('upi_error').classList.remove('d-none');
+                    valid = false;
+                }
+            }
+
+            if (!valid) e.preventDefault();
+        });
+    });
+</script>

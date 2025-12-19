@@ -1,0 +1,74 @@
+{% load static %}
+{% include 'Customer/header.html' %}
+
+<div class="container mt-5">
+    <h3 class="text-center text-success fw-bold">Submit Your Feedback</h3>
+    
+    <div class="row justify-content-center mt-4">
+        <div class="col-lg-6">
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-body">
+                    
+                    <h5 class="text-primary text-center"><strong>Package:</strong> {{ package.package_name }}</h5>
+                    <p class="text-center text-muted">Please rate your experience with this package</p>
+                    
+                    <form method="POST" action="{% url 'customer_feedback' booking.booking_id %}" id="feedbackForm">
+                        {% csrf_token %}
+
+                        <!-- ⭐ Star Rating -->
+                        <div class="rating text-center my-3">
+                            <input type="hidden" name="rating" id="rating" required>
+                            <span class="star" data-value="1">&#9733;</span>
+                            <span class="star" data-value="2">&#9733;</span>
+                            <span class="star" data-value="3">&#9733;</span>
+                            <span class="star" data-value="4">&#9733;</span>
+                            <span class="star" data-value="5">&#9733;</span>
+                        </div>
+
+                        <!-- Feedback Text Area -->
+                        <div class="mb-3">
+                            <label for="feedback" class="form-label fw-bold">Your Feedback</label>
+                            <textarea class="form-control" name="feedback" id="feedback" rows="4" placeholder="Write your experience..." required></textarea>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="text-center mt-3">
+                            <button type="submit" class="btn btn-success w-100 rounded-pill fw-bold">
+                                <i class="fas fa-paper-plane"></i> Submit Feedback
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ⭐ Star Rating Script -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const stars = document.querySelectorAll(".star");
+        const ratingInput = document.getElementById("rating");
+
+        stars.forEach(star => {
+            star.addEventListener("click", function () {
+                let value = this.getAttribute("data-value");
+                ratingInput.value = value;
+
+                stars.forEach(s => s.classList.remove("selected"));
+                for (let i = 0; i < value; i++) {
+                    stars[i].classList.add("selected");
+                }
+            });
+        });
+    });
+</script>
+
+<!-- ⭐ Star Rating Styles -->
+<style>
+    .rating { font-size: 30px; color: #ddd; cursor: pointer; }
+    .rating .star:hover, .rating .star.selected { color: gold; }
+</style>
+
+{% include 'Customer/footer.html' %}

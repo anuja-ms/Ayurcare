@@ -1,0 +1,171 @@
+{% load static %}
+{% include 'Hospital/header.html' %}
+
+<!-- Dashboard Inner -->
+<main id="main" class="main">
+    <div class="container-fluid d-flex justify-content-center align-items-center" style="min-height: 100vh; padding: 20px;">
+        <div class="row justify-content-center w-100">
+            <div class="col-md-6 col-lg-5">
+                <div class="card shadow border-0">
+                    <div class="card-body p-4">
+                        <h3 class="text-center mb-3" style="font-size: 24px; font-weight: bold; color: #333;">Package Service Registration</h3>
+                        <p class="text-center text-muted mb-4" style="font-size: 14px;">Fill out the details below to add a package service.</p>
+
+                        <form action="{% url 'packageservice' %}" method="post" enctype="multipart/form-data" id="packageServiceForm">
+                            {% csrf_token %}
+
+                            <!-- Package Name -->
+                            <div class="form-group mb-3">
+                                <label for="package-name" class="form-label" style="font-size: 16px; font-weight: 500;">Package Name</label>
+                                <select name="ddlpackage" class="form-control form-control-lg rounded" required>
+                                    <option value="">Select Package</option>
+                                    {% for p in package %}
+                                    <option value="{{p.package_id}}">{{p.package_name}}</option>
+                                    {% endfor %}
+                                </select>
+                                <span class="error-message"></span>
+                            </div>
+
+                            <!-- Service Name -->
+                            <div class="form-group mb-3">
+                                <label for="service-name" class="form-label" style="font-size: 16px; font-weight: 500;">Service Name</label>
+                                <select name="ddlservice" class="form-control form-control-lg rounded" required>
+                                    <option value="">Select Service</option>
+                                    {% for s in service %}
+                                    <option value="{{s.service_id}}">{{s.service_name}}</option>
+                                    {% endfor %}
+                                </select>
+                                <span class="error-message"></span>
+                            </div>
+
+                            <!-- Submit and Reset Buttons -->
+                            <div class="d-flex justify-content-between mt-4">
+                                <button type="submit" class="btn btn-success px-4 py-2" style="font-size: 16px;">Add Package Service</button>
+                                <button type="reset" class="btn btn-outline-secondary px-4 py-2" style="font-size: 16px;">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Custom CSS for better layout -->
+<style>
+    /* General Fixes */
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    /* Form Card Styling */
+    .card {
+        width: 100%;
+        max-width: 550px;
+        margin: auto;
+        border-radius: 12px;
+    }
+
+    .card-body {
+        padding: 30px;
+    }
+
+    /* Form Inputs */
+    .form-control-lg {
+        height: 45px;
+        font-size: 16px;
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+    }
+
+    /* Error Message Styling */
+    .error-message {
+        color: red;
+        font-size: 14px;
+        margin-top: 5px;
+        display: block;
+    }
+
+    .error-border {
+        border-color: red !important;
+    }
+
+    /* Buttons */
+    .btn {
+        font-size: 16px;
+        font-weight: 500;
+        border-radius: 8px;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border: none;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+    }
+
+    .btn-outline-secondary {
+        border: 1px solid #6c757d;
+        color: #6c757d;
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #6c757d;
+        color: #fff;
+    }
+
+    /* Mobile Optimization */
+    @media (max-width: 768px) {
+        .col-md-6 {
+            max-width: 100%;
+        }
+    }
+</style>
+
+<!-- JavaScript Validation -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("packageServiceForm").addEventListener("submit", function (e) {
+            let isValid = true;
+
+            // Validate Package Selection
+            let packageSelect = document.querySelector("select[name='ddlpackage']");
+            if (packageSelect.value === "") {
+                showError(packageSelect, "Please select a package!");
+                isValid = false;
+            } else {
+                hideError(packageSelect);
+            }
+
+            // Validate Service Selection
+            let serviceSelect = document.querySelector("select[name='ddlservice']");
+            if (serviceSelect.value === "") {
+                showError(serviceSelect, "Please select a service!");
+                isValid = false;
+            } else {
+                hideError(serviceSelect);
+            }
+
+            if (!isValid) {
+                e.preventDefault(); // Prevent form submission if validation fails
+            }
+        });
+
+        function showError(input, message) {
+            input.classList.add("error-border");
+            let errorSpan = input.nextElementSibling;
+            errorSpan.textContent = message;
+        }
+
+        function hideError(input) {
+            input.classList.remove("error-border");
+            let errorSpan = input.nextElementSibling;
+            errorSpan.textContent = "";
+        }
+    });
+</script>
+
+{% include 'Hospital/footer.html' %}

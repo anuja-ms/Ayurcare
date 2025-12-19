@@ -1,0 +1,118 @@
+{% load static %}
+{% include 'Hospital/header.html' %}
+
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+            <p class="fs-5 fw-bold text-primary">Manage Bookings</p>
+            <h1 class="display-5 mb-4">Customer Booking Requests</h1>
+        </div>
+
+        <!-- Toggle Buttons -->
+        <div class="text-center mb-4">
+            <button id="activeBtn" class="btn btn-outline-success active">Active Bookings</button>
+            <button id="cancelledBtn" class="btn btn-outline-danger">Cancelled Bookings</button>
+        </div>
+
+        <!-- Active Bookings Section -->
+        <div id="activeBookings" class="card shadow-lg p-4">
+            <h4 class="text-success mb-3">Active Bookings</h4>
+            <table class="table table-striped table-hover table-bordered text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Customer Name</th>
+                        <th>Package Name</th>
+                        <th>Hospital Amount</th>
+                        <th>Required Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in active_bookings %}
+                    <tr>
+                        <td>{{ item.booking.customer_id.customer_name }}</td>
+                        <td>{{ item.booking.package_id.package_name }}</td>
+                        <td>₹{{ item.hospital_amount }}</td>
+                        <td>{{ item.booking.require_date }}</td>
+                        <td>
+                            <span class="badge {% if item.booking.status == 'Pending' %}bg-warning text-dark{% elif item.booking.status == 'Accepted' %}bg-success{% else %}bg-danger{% endif %}">
+                                {{ item.booking.status }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if item.booking.status == "Pending" %}
+                                <form method="post" action="{% url 'accept_booking' item.booking.booking_id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-success btn-sm">Accept</button>
+                                </form>
+
+                                <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#rejectModal{{ item.booking.booking_id }}">Reject</button>
+                            {% else %}
+                                <button class="btn btn-secondary btn-sm" disabled>Closed</button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-muted">No active bookings found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Cancelled Bookings Section (Initially Hidden) -->
+        <div id="cancelledBookings" class="card shadow-lg p-4 d-none">
+            <h4 class="text-danger mb-3">Cancelled Bookings</h4>
+            <table class="table table-striped table-hover table-bordered text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Customer Name</th>
+                        <th>Package Name</th>
+                        <th>Hospital Amount</th>
+                        <th>Required Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cancelled_bookings %}
+                    <tr>
+                        <td>{{ item.booking.customer_id.customer_name }}</td>
+                        <td>{{ item.booking.package_id.package_name }}</td>
+                        <td>₹{{ item.hospital_amount }}</td>
+                        <td>{{ item.booking.require_date }}</td>
+                        <td>
+                            <span class="badge bg-danger">Cancelled</span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-muted">No cancelled bookings.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<!-- JavaScript for Toggle -->
+<script>
+    document.getElementById("activeBtn").addEventListener("click", function() {
+        document.getElementById("activeBookings").classList.remove("d-none");
+        document.getElementById("cancelledBookings").classList.add("d-none");
+        this.classList.add("active");
+        document.getElementById("cancelledBtn").classList.remove("active");
+    });
+
+    document.getElementById("cancelledBtn").addEventListener("click", function() {
+        document.getElementById("cancelledBookings").classList.remove("d-none");
+        document.getElementById("activeBookings").classList.add("d-none");
+        this.classList.add("active");
+        document.getElementById("activeBtn").classList.remove("active");
+    });
+</script>
+
+{% include 'Hospital/footer.html' %}

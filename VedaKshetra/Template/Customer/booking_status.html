@@ -1,0 +1,88 @@
+{% load static %}
+{% include 'Customer/header.html' %}
+
+<div class="container mt-5">
+    <h3 class="text-center text-success fw-bold">Your Booking Status</h3>
+
+    <div class="row justify-content-center mt-4">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-body">
+
+                    {% for item in bookings %}
+                        <div class="booking-card mb-4 p-4 border rounded shadow-sm bg-light">
+                            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="text-primary"><strong>Booking ID:</strong> #{{ item.booking.booking_id }}</h5>
+                                <span class="badge 
+                                    {% if item.booking.status == 'Pending' %} bg-warning text-dark 
+                                    {% elif item.booking.status == 'Accepted' %} bg-success 
+                                    {% elif item.booking.status == 'Paid' %} bg-info 
+                                    {% elif item.booking.status == 'Cancelled' %} bg-secondary 
+                                    {% elif item.booking.status == 'Rejected' %} bg-danger {% endif %}">
+                                    {{ item.booking.status }}
+                                </span>
+                            </div>
+                            <hr>
+
+                            <p><strong>Customer Name:</strong> {{ item.booking.customer_id.customer_name }}</p>
+                            <p><strong>Booking Date:</strong> {{ item.booking.booking_date }}</p>
+
+                            <div class="mt-2">
+                                {% if item.booking.status == 'Pending' %}
+                                    <p class="text-warning fw-bold"><i class="fas fa-clock"></i> Your booking is under review.</p>
+
+                                {% elif item.booking.status == 'Accepted' %}
+                                    <p class="text-success fw-bold"><i class="fas fa-check-circle"></i> Your booking has been accepted! Please proceed to payment.</p>
+                                    <a href="{% url 'payment' item.booking.booking_id %}" class="btn btn-primary btn-sm">Pay Now</a>
+
+                                {% elif item.booking.status == 'Paid' %}
+                                    <p class="text-info fw-bold"><i class="fas fa-credit-card"></i> Your booking has been paid successfully.</p>
+
+                                {% elif item.booking.status == 'Rejected' %}
+                                    <p class="text-danger fw-bold"><i class="fas fa-times-circle"></i> Your booking was rejected.</p>
+                                    <p><strong>Reason:</strong> {{ item.booking.reason }}</p>
+
+                                {% elif item.booking.status == 'Cancelled' %}
+                                    <p class="text-secondary fw-bold"><i class="fas fa-ban"></i> Your booking has been cancelled.</p>
+                                {% endif %}
+                            </div>
+
+                            <p><strong>Payment Status:</strong> 
+                                <span class="badge 
+                                    {% if item.payment_status == 'Completed' %} bg-success 
+                                    {% elif item.payment_status == 'Failed' %} bg-danger 
+                                    {% else %} bg-warning text-dark {% endif %}">{{ item.payment_status }}
+                                </span>
+                            </p>
+
+                            <!-- ✅ Show Feedback Button Only If Payment is Completed and Feedback is Not Given -->
+                            {% if item.payment_status == "Completed" and not item.feedback_exists %}
+                                <a href="{% url 'customer_feedback' item.booking.booking_id %}" class="btn btn-warning btn-sm rounded-pill">
+                                    <i class="fas fa-star"></i> Give Feedback
+                                </a>
+                            {% elif item.feedback_exists %}
+                                <p class="text-success fw-bold"><i class="fas fa-check-circle"></i> Feedback Submitted</p>
+                            {% endif %}
+
+                            <!-- ✅ Show Cancel Button If Eligible -->
+                            {% if item.show_cancel %}
+                                <div class="text-end mt-3">
+                                    <a href="{% url 'cancel_policy' item.booking.booking_id %}" class="btn btn-danger btn-sm rounded-pill">
+                                        <i class="fas fa-times"></i> Cancel Booking
+                                    </a>
+                                </div>
+                            {% endif %}
+
+                        </div>
+                    {% empty %}
+                        <p class="text-center text-muted">No bookings found.</p>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'Customer/footer.html' %}

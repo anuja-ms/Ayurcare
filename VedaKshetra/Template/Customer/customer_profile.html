@@ -1,0 +1,74 @@
+{% include 'customer/header.html' %}
+
+<main class="main">
+    <div class="container mt-5">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title text-center mb-4">My Profile</h5>
+
+                <div class="row">
+                    <!-- Profile Picture -->
+                    <div class="col-md-4 text-center mb-4">
+                        <img src="{{ customer.image.url }}" class="img-fluid rounded-circle" alt="Profile Image" width="150">
+                    </div>
+
+                    <!-- Profile Details -->
+                    <div class="col-md-8">
+                        <table class="table table-striped table-bordered">
+                            <tr>
+                                <th class="bg-light">Name:</th>
+                                <td>{{ customer.customer_name }}</td>
+                            </tr>
+                            <tr>
+                                <th class="bg-light">Email:</th>
+                                <td>{{ customer.email }}</td>
+                            </tr>
+                            <tr>
+                                <th class="bg-light">Phone:</th>
+                                <td>{{ customer.phone }}</td>
+                            </tr>
+                            <tr>
+                                <th class="bg-light">Address:</th>
+                                <td>{{ customer.address }}</td>
+                            </tr>
+                            <tr>
+                                <th class="bg-light">Location:</th>
+                                <td>{{ customer.location_id.location_name }}</td>
+                            </tr>
+                            <tr>
+                                <th class="bg-light">ID Proof:</th>
+                                <td>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#idProofModal" class="btn btn-success btn-sm">View ID Proof</a>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Buttons for Edit Profile and Change Password -->
+                        <a href="{% url 'cprofile_edit' %}" class="btn btn-warning btn-block mt-3">Edit Profile</a>
+                        <a href="{% url 'change_password' %}" class="btn btn-primary btn-block mt-3">Change Password</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for ID Proof -->
+    <div class="modal fade" id="idProofModal" tabindex="-1" aria-labelledby="idProofModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="idProofModalLabel">ID Proof</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img src="{{ customer.idproof.url }}" class="img-fluid" alt="ID Proof">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% include 'customer/footer.html' %}

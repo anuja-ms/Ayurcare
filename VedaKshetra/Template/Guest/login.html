@@ -1,0 +1,193 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - VedaKshetra</title>
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'Guest/css/bootstrap.min.css' %}">
+    
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: url('{% static "Guest/images/ayurveda_bg.jpg" %}') no-repeat center center/cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 1200px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            display: flex;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            min-height: 80vh;
+        }
+
+        .login-image {
+            flex: 1;
+            background: url('/images/logo_img.jpg') no-repeat center center/cover;
+        }
+
+        .login-form {
+            flex: 1;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .login-form h2 {
+            font-size: 32px;
+            color: #2E7D32;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .login-form p {
+            text-align: center;
+            color: #388E3C;
+            margin-bottom: 30px;
+            font-size: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #388E3C;
+        }
+
+        .form-control {
+            padding: 14px 40px;
+            border-radius: 8px;
+            border: 1px solid #66BB6A;
+            background-color: #F1F8E9;
+            font-size: 16px;
+        }
+
+        .form-control:focus {
+            border-color: #388E3C;
+            background-color: #fff;
+        }
+
+        .btn-success {
+            background-color: #388E3C;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            padding: 14px;
+            border-radius: 8px;
+            border: none;
+            transition: background 0.3s;
+        }
+
+        .btn-success:hover {
+            background-color: #2E7D32;
+        }
+
+        .text-center a {
+            color: #1B5E20;
+            font-weight: 500;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .text-center a:hover {
+            color: #004D40;
+            text-decoration: underline;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-icons a {
+            font-size: 24px;
+            color: #388E3C;
+            transition: color 0.3s;
+        }
+
+        .social-icons a:hover {
+            color: #1B5E20;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <!-- Image Section -->
+    <div class="login-image"></div>
+
+    <!-- Form Section -->
+    <div class="login-form">
+        <h2>Welcome to VedaKshetra</h2>
+        <p>Rejuvenate your health through Ayurveda.</p>
+
+        <form action="{% url 'login_process' %}" method="post">
+            {% csrf_token %}
+            {% if error %}
+            <div class="alert alert-danger text-center error-box" role="alert">
+                <i class="fas fa-exclamation-circle"></i> {{ error }}
+            </div>
+            {% endif %}
+
+            <div class="form-group">
+                <i class="fas fa-user"></i>
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" name="login_username" required autocomplete="off" >
+            </div>
+
+            <div class="form-group">
+                <i class="fas fa-lock"></i>
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="login_password" required autocomplete="new-password">
+            </div>
+
+            <button type="submit" class="btn btn-success btn-block">Log In</button>
+
+            <div class="text-center mt-4">
+                <a href="{% url 'forgot_password' %}">Forgot Password?</a> | 
+                <a href="#">Sign Up</a>
+            </div>            
+
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-google"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="{% static 'Guest/js/jquery-3.3.1.min.js' %}"></script>
+<script src="{% static 'Guest/js/bootstrap.min.js' %}"></script>
+
+</body>
+</html>

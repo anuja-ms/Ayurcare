@@ -1,0 +1,101 @@
+{% load static %}
+{% include 'Admin/header.html' %}
+
+<!-- dashboard inner -->
+<main id="main" class="main">
+    <div class="container-fluid d-flex justify-content-center align-items-center" style="height: 100vh; width:150vh; padding: 0 15px;">
+        <div class="row justify-content-center w-100">
+            <!-- Adjusted Form Width and Height -->
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow-lg">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4 class="card-title text-center mb-0" style="font-size: 22px; font-weight: 600;">Location Registration</h4>
+                            <a href="{% url 'viewlocation' %}" class="btn btn-outline-primary btn-sm">View Locations</a>
+                        </div>
+                        <p class="card-description text-center mb-4" style="font-size: 16px;">Please provide the necessary information</p>
+
+                        <form action="{% url 'location_process' %}" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            
+                            <!-- District Dropdown -->
+                            <div class="form-group mb-4">
+                                <label for="district-name" style="font-size: 16px; font-weight: 500;">District Name</label>
+                                <select name="district_id" id="district-name" class="form-control form-control-lg" required>
+                                    <option value="">Select District</option>
+                                    {% for d in districts %}
+                                    <option value="{{ d.district_id }}">{{ d.district_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <!-- Location Name Input -->
+                            <div class="form-group mb-4">
+                                <label for="location_name" style="font-size: 16px; font-weight: 500;">Location Name</label>
+                                <input type="text" class="form-control form-control-lg" id="location_name" placeholder="Enter location name" 
+                                    name="lname" required style="height: 40px; font-size: 16px;" 
+                                    pattern="[A-Za-z\s]+" title="Only letters and spaces are allowed">
+                            </div>
+
+                            <!-- Submit and Reset Buttons -->
+                            <div class="d-flex justify-content-between mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg">Add Location</button>
+                                <button type="reset" class="btn btn-light btn-lg">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Custom CSS for better layout -->
+<style>
+    .container-fluid {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    /* Form Card Styling */
+    .card {
+        width: 100%;
+        max-width: 750px;  /* Adjust the max width to be more balanced */
+        margin: auto;  /* Center the card */
+    }
+
+    .card-body {
+        padding: 30px;
+    }
+
+    /* Form Inputs Styling */
+    .form-control-lg {
+        height: 40px;
+        font-size: 16px;
+    }
+
+    .btn-lg {
+        font-size: 16px;
+        padding: 12px 25px;
+    }
+
+    /* Margin adjustments for buttons */
+    .d-flex button {
+        margin-top: 15px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 1200px) {
+        .col-md-8 {
+            max-width: 700px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .col-md-8 {
+            max-width: 100%;
+        }
+    }
+</style>
+</div>
+{% include 'Admin/footer.html' %}

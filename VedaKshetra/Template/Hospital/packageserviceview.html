@@ -1,0 +1,110 @@
+{% include 'Hospital/header.html' %}
+{% load static %}
+<script src="{% static 'admin/jquery-3.7.1.min.js' %}"></script>
+<script>
+    $(document).ready(function() {
+        let csrfToken = $("input[name='csrfmiddlewaretoken']").val();
+
+        $.ajaxSetup({
+            headers: { "X-CSRFToken": csrfToken }
+        });
+
+        $('#package_id').change(function() {
+            var package_id = $(this).val();
+            $('#service').empty(); // Clear previous data
+
+            if (package_id) {
+                $('#service').html('<tr><td colspan="4" class="text-center text-primary">Loading services...</td></tr>');
+
+                $.ajax({
+                    type: "POST",
+                    url: '{% url "fillpackservice" %}',
+                    data: { pid: package_id },
+                    dataType: "json",
+                    success: function(data) {
+                        $('#service').empty();
+                        if (data.length === 0) {
+                            $('#service').html('<tr><td colspan="4" class="text-center text-muted">No services available for this package.</td></tr>');
+                        } else {
+                            let s = 1;
+                            $.each(data, function(key, val) {
+                                var imgSrc = val.image_url ? val.image_url : '{% static "images/default.png" %}';
+                                var row = '<tr>' +
+                                          '<td>' + s++ + '</td>' +
+                                          '<td>' + val.service_name + '</td>' +
+                                          '<td><strong>₹' + val.amount + '</strong></td>' +
+                                          '<td><img src="' + imgSrc + '" alt="Service" class="service-img"></td>' +
+                                          '</tr>';
+                                $('#service').append(row);
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        $('#service').html('<tr><td colspan="4" class="text-danger text-center">Error fetching services. Please try again.</td></tr>');
+                    }
+                });
+            } else {
+                $('#service').html('<tr><td colspan="4" class="text-muted text-center">Select a package to view services.</td></tr>');
+            }
+        });
+    });
+</script>
+
+<style>
+    .service-img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+    }
+    .table {
+        background: #fff;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    th {
+        background: #f8f9fa;
+        text-align: center;
+    }
+    td {
+        text-align: center;
+        vertical-align: middle;
+    }
+</style>
+
+<main id="main" class="main">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Service Table</h5>
+
+            <form method="POST">
+                {% csrf_token %}
+                <select name="package_id" id="package_id" class="form-control">
+                    <option value="">Select Package</option>
+                    {% for p in packages %}
+                        <option value="{{ p.package_id }}">{{ p.package_name }}</option>
+                    {% endfor %}
+                </select>
+            </form><br>
+
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Sl.no</th>
+                        <th>Service Name</th>
+                        <th>Amount</th>
+                        <th>Service Image</th>
+                    </tr>
+                </thead>
+                <tbody id="service">
+                    <tr>
+                        <td colspan="4" class="text-muted text-center">Select a package to view services.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+{% include 'Hospital/footer.html' %}

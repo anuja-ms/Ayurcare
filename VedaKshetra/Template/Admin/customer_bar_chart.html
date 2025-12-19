@@ -1,0 +1,124 @@
+{% include 'Admin/header.html' %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Booking Report</title>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* Ensure the page takes full height */
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Poppins', sans-serif;
+            background-color: #eef2f3;
+        }
+
+        /* Content should expand to push footer down */
+        .content {
+            flex: 1; /* Pushes footer to the bottom */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 350px;
+            width: 100%;
+            max-width: 800px;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #444;
+            font-weight: 600;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        /* Footer stays at the bottom */
+        .footer {
+            width: 100%;
+            background: #222;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="content">
+        <h2>📊 Customer Booking Report</h2>
+        <div class="chart-container">
+            <canvas id="customerChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        var ctx = document.getElementById('customerChart').getContext('2d');
+        var colors = [
+            'rgba(255, 99, 132, 0.6)',  // Red
+            'rgba(54, 162, 235, 0.6)',  // Blue
+            'rgba(255, 206, 86, 0.6)',  // Yellow
+            'rgba(75, 192, 192, 0.6)',  // Green
+            'rgba(153, 102, 255, 0.6)', // Purple
+            'rgba(255, 159, 64, 0.6)'   // Orange
+        ];
+
+        var customerChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {{ labels|safe }}, // Customer names
+                datasets: [{
+                    label: 'Total Bookings',
+                    data: {{ data|safe }},  // Booking counts
+                    backgroundColor: colors.slice(0, {{ labels|length }}), // Assign different colors
+                    borderColor: colors.map(color => color.replace('0.6', '1')), // Darker border
+                    borderWidth: 1,
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { font: { size: 14 }, stepSize: 1 },
+                        grid: { color: "#ddd" }
+                    },
+                    x: {
+                        ticks: { font: { size: 14 }, autoSkip: false },
+                        grid: { display: false }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: true }
+                }
+            }
+        });
+    </script>
+</div>
+    {% include 'Admin/footer.html' %}
+
+</body>
+</html>

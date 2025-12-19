@@ -1,0 +1,98 @@
+{% include 'Hospital/header.html' %}
+{% load static %}
+
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h3 class="card-title text-center mb-4">Edit My Profile</h3>
+
+            <form method="POST" enctype="multipart/form-data" id="profileForm" onsubmit="return validateForm()">
+                {% csrf_token %}
+                <div class="row">
+                    <!-- Profile Picture -->
+                    <div class="col-md-4 text-center mb-4">
+                        <img src="{{ hospital.image.url }}" 
+                             class="img-fluid rounded-circle border" 
+                             alt="Profile Image" 
+                             width="150"
+                             onerror="this.onerror=null;this.src='{% static "images/default-profile.png" %}';">
+                        <div class="form-group mt-3">
+                            <label class="form-label">Change Profile Image</label>
+                            <input type="file" name="image" class="form-control" accept="image/*">
+                        </div>
+                    </div>
+
+                    <!-- Profile Details -->
+                    <div class="col-md-8">
+                        <div class="form-group mb-3">
+                            <label class="form-label">Name</label>
+                            <input type="text" name="hospital_name" class="form-control" value="{{ hospital.hospital_name }}" required>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="email" class="form-control" value="{{ hospital.email }}" required>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="form-label">Phone</label>
+                            <input type="text" name="phone" class="form-control" value="{{ hospital.phone }}" required pattern="^[0-9]{10}$" title="Enter a valid 10-digit phone number">
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="form-label">Address</label>
+                            <textarea name="address" class="form-control" rows="3" required>{{ hospital.address }}</textarea>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="form-label">Change ID Proof (PDF, JPG, PNG)</label>
+                            <input type="file" name="idproof" class="form-control" accept=".pdf,.jpg,.png">
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-success px-4">Save Changes</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% include 'Hospital/footer.html' %}
+
+<!-- Custom CSS -->
+<style>
+    .container {
+        max-width: 800px;
+    }
+    .card {
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .form-control {
+        border-radius: 5px;
+    }
+    .btn-success {
+        background-color: #28a745;
+        border: none;
+    }
+    .btn-success:hover {
+        background-color: #218838;
+    }
+</style>
+
+<!-- JavaScript Validation -->
+<script>
+    function validateForm() {
+        let phone = document.querySelector('input[name="phone"]').value;
+        let phonePattern = /^[0-9]{10}$/;
+
+        if (!phonePattern.test(phone)) {
+            alert("Please enter a valid 10-digit phone number.");
+            return false;
+        }
+        return true;
+    }
+</script>

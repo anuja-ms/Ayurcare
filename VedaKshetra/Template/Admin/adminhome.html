@@ -1,0 +1,94 @@
+{% include 'Admin/header.html' %}
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Hospital Approval Pie Chart -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-center">🏥 Hospital Approval Status</h5>
+                    <canvas id="approvalPieChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feedback Pie Chart -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-center">⭐ Customer Feedback Ratings</h5>
+                    <canvas id="feedbackPieChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <!-- Customer Booking Report Bar Chart (Full Width) -->
+        <div class="col-lg-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-center">📊 Customer Booking Report</h5>
+                    <canvas id="customerChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% include 'Admin/footer.html' %}
+
+<!-- Load Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // ✅ Hospital Approval Pie Chart
+        var approvalCtx = document.getElementById('approvalPieChart').getContext('2d');
+        new Chart(approvalCtx, {
+            type: 'pie',
+            data: {
+                labels: {{ hospital_labels|safe }},
+                datasets: [{
+                    data: {{ hospital_data|safe }},
+                    backgroundColor: ['#34495e', '#e67e22', '#e74c3c', '#3498db', '#9b59b6'],
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        });
+
+        // ✅ Feedback Ratings Pie Chart
+        var feedbackCtx = document.getElementById('feedbackPieChart').getContext('2d');
+        new Chart(feedbackCtx, {
+            type: 'pie',
+            data: {
+                labels: {{ feedback_labels|safe }},
+                datasets: [{
+                    data: {{ feedback_data|safe }},
+                    backgroundColor: ['#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0', '#9966ff'],
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        });
+
+        // ✅ Customer Booking Bar Chart
+        var customerCtx = document.getElementById('customerChart').getContext('2d');
+        new Chart(customerCtx, {
+            type: 'bar',
+            data: {
+                labels: {{ booking_labels|safe }},
+                datasets: [{
+                    label: 'Total Bookings',
+                    data: {{ booking_data|safe }},
+                    backgroundColor: ['rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(255, 206, 86, 0.6)'],
+                    borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+            }
+        });
+    });
+</script>

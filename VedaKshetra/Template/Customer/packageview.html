@@ -1,0 +1,107 @@
+{% load static %}
+{% include 'Customer/header.html' %}
+
+<!-- Hospital Package View Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+            <p class="fs-5 fw-bold text-primary">Hospital Packages</p>
+            <h1 class="display-5 mb-4">Find the Best Healthcare Packages</h1>
+        </div>
+        <div class="row g-4">
+            {% for hos in hos %}
+            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                <div class="card package-item rounded shadow-lg border-0 overflow-hidden glass-card">
+                    
+                    <!-- Image Container -->
+                    <div class="image-container position-relative">
+                        <img class="card-img-top img-fluid" src="{{ hos.image.url }}" alt="{{ hos.package_name }}">
+                        <span class="badge bg-primary position-absolute top-0 start-0 m-2 px-3 py-2">{{ hos.noofdays }} Days</span>
+                    </div>
+
+                    <div class="card-body text-center">
+                        <h4 class="text-dark mb-2">{{ hos.package_name }}</h4>
+                        <p class="text-muted">
+                            <i class="fas fa-calendar-alt text-primary"></i> Duration:
+                            <span class="fw-bold text-primary">{{ hos.noofdays }} Days</span>
+                        </p>
+
+                        <!-- Buttons: View Services & Book Now -->
+                        <div class="d-flex justify-content-center mt-3">
+                            <a class="btn btn-outline-primary btn-sm me-2 px-4 py-2" href="{% url 'serviceview' id=hos.package_id %}">
+                                <i class="fas fa-list"></i> View Services
+                            </a>
+                            <a class="btn btn-primary btn-sm px-4 py-2" href="{% url 'packagebooking' id=hos.package_id %}">
+                                <i class="fas fa-shopping-cart"></i> Book Now
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<!-- Hospital Package View End -->
+
+{% include 'Customer/footer.html' %}
+
+<style>
+/* Glassmorphism Card Styling */
+.glass-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 15px;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+.glass-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Image Container Styling */
+.image-container {
+    height: 250px;
+    overflow: hidden;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    position: relative;
+}
+.image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    transition: transform 0.3s ease-in-out;
+}
+.image-container img:hover {
+    transform: scale(1.1);
+}
+
+/* Badge Styling */
+.badge {
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 30px;
+}
+
+/* Button Styling */
+.btn {
+    border-radius: 30px;
+    transition: all 0.3s ease;
+}
+.btn-outline-primary:hover {
+    background-color: #0056b3;
+    color: white;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .glass-card:hover {
+        transform: none;
+        box-shadow: none;
+    }
+}
+</style>

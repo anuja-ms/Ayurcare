@@ -1,0 +1,153 @@
+{% load static %}
+{% include 'Customer/header.html' %}
+
+<!-- Services Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+            <p class="fs-5 fw-bold text-primary">Our Services</p>
+            <h1 class="display-5 mb-4">Find the Best Healthcare Services</h1>
+        </div>
+
+        <div class="row g-4">
+            {% for service in service %}
+            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                <div class="card service-item rounded shadow-lg border-0 overflow-hidden position-relative">
+                    
+                    <!-- Image Container with Eye Icon (Opens in Modal) -->
+                    <div class="image-container position-relative">
+                        <img class="card-img-top img-fluid service-image" src="{{ service.service_id.image.url }}" alt="{{ service.service_id.service_name }}" onclick="openModal('{{ service.service_id.image.url }}')">
+                        <div class="overlay d-flex align-items-center justify-content-center">
+                            <i class="fas fa-eye" onclick="openModal('{{ service.service_id.image.url }}')"></i>
+                        </div>
+                    </div>
+
+                    <!-- Service Details -->
+                    <div class="card-body text-center">
+                        <h4 class="text-dark mb-2">{{ service.service_id.service_name }}</h4>
+                        <p class="text-muted">
+                            <i class="fas fa-dollar-sign text-primary"></i> Amount: 
+                            <span class="fw-bold text-primary">{{ service.service_id.amount }}</span>
+                        </p>
+
+                        <a class="btn btn-primary btn-sm px-4 py-2 mt-2" href="{% url 'service_detail' service_id=service.service_id.service_id %}">
+                            <i class="fas fa-info-circle"></i> Learn More
+                        </a>                        
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<!-- Services End -->
+
+<!-- Image Modal -->
+<div id="imageModal" class="modal">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <img class="modal-content" id="modalImg">
+</div>
+
+{% include 'Customer/footer.html' %}
+
+<!-- CSS Styling -->
+<style>
+    /* Service Card Styling */
+    .service-item {
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(10px);
+    }
+    .service-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Image Styling */
+    .image-container {
+        height: 250px;
+        overflow: hidden;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        position: relative;
+        cursor: pointer;
+    }
+    .image-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    /* Hover Effect */
+    .service-item:hover .image-container img {
+        transform: scale(1.1);
+    }
+
+    /* Overlay Eye Icon */
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    .overlay i {
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
+    }
+    .image-container:hover .overlay {
+        opacity: 1;
+    }
+
+    /* Modal Styling */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+    .modal-content {
+        margin: auto;
+        display: block;
+        width: 60%;
+        max-width: 600px;
+        max-height: 70vh;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 10px;
+        object-fit: contain;
+    }
+    .close {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        color: white;
+        font-size: 35px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+</style>
+
+<!-- JavaScript for Modal -->
+<script>
+    function openModal(imageSrc) {
+        document.getElementById('imageModal').style.display = 'block';
+        document.getElementById('modalImg').src = imageSrc;
+    }
+
+    function closeModal() {
+        document.getElementById('imageModal').style.display = 'none';
+    }
+</script>

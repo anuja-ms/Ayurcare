@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+  {% load static %}
+
+  <head>
+    <script src="{% static 'Admin/jquery-3.7.1.min.js' %}"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Service</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome Icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+    <style>
+      /* Reset */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f7f7f7;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        padding-top: 80px; /* Space for fixed header */
+      }
+
+      /* Header */
+      .header-container {
+        width: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+      }
+
+      /* Card */
+      .card {
+        background-color: white;
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 700px;
+        margin: 100px 0 30px; /* Adjusted for spacing */
+        transition: 0.3s;
+      }
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      }
+
+      /* Title */
+      .card-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 28px;
+        font-weight: 600;
+        color: #4CAF50;
+        text-align: center;
+        margin-bottom: 25px;
+        text-transform: uppercase;
+      }
+
+      /* Form */
+      .form-group {
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      label {
+        font-size: 16px;
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 6px;
+      }
+
+      .form-control {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        background-color: #fafafa;
+        transition: 0.3s;
+      }
+
+      .form-control:focus {
+        border-color: #4CAF50;
+        box-shadow: 0 0 8px rgba(76, 175, 80, 0.2);
+        outline: none;
+      }
+
+      /* Amount Field with Icon */
+      .currency-wrapper {
+        display: flex;
+        align-items: center;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background: #fafafa;
+        padding: 10px;
+      }
+
+      .currency-wrapper i {
+        margin-right: 10px;
+        color: #4CAF50;
+      }
+
+      .currency-input {
+        border: none;
+        background: transparent;
+        flex: 1;
+        padding: 0;
+        font-size: 16px;
+        outline: none;
+      }
+
+      /* Buttons */
+      .button-group {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 15px;
+      }
+
+      .btn {
+        padding: 14px 25px;
+        font-size: 16px;
+        font-weight: 500;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      .btn-primary {
+        background: #4CAF50;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #388E3C;
+      }
+
+      .btn-secondary {
+        background: #ddd;
+        color: #333;
+      }
+
+      .btn-secondary:hover {
+        background: #bbb;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .card {
+          padding: 30px;
+        }
+        .button-group {
+          flex-direction: column;
+        }
+        .btn {
+          width: 100%;
+        }
+      }
+
+      /* Footer */
+      footer {
+        width: 100%;
+        padding: 15px;
+        background-color: #333;
+        color: white;
+        text-align: center;
+        position: relative;
+        margin-top: auto;
+      }
+      /* Improved Heading Style */
+.card-title {
+  font-family: 'Poppins', sans-serif; /* Sleek & modern */
+  font-size: 30px; /* Slightly larger */
+  font-weight: 700; /* Bold & readable */
+  color: #2C3E50; /* Dark blue for better contrast */
+  text-align: center;
+  margin-bottom: 25px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px; /* Adds spacing for elegance */
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+    </style>
+  </head>
+
+  <body>
+
+    <!-- Fixed Header -->
+    <div class="header-container">
+      {% include 'Hospital/header.html' %}
+    </div>
+
+    <!-- Main Form -->
+    <div class="card">
+      <h3 class="card-title">Add New Service</h3>
+
+      <form method="post" action="{% url 'serviceinsert' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Service Name -->
+        <div class="form-group">
+          <label><i class="fas fa-cogs"></i> Service Name</label>
+          <input type="text" class="form-control" name="service_name" placeholder="Enter service name" required>
+        </div>
+
+        <!-- Service Description -->
+        <div class="form-group">
+          <label><i class="fas fa-info-circle"></i> Service Description</label>
+          <textarea class="form-control" name="description" rows="4" placeholder="Enter service description" required></textarea>
+        </div>
+
+        <!-- Service Image -->
+        <div class="form-group">
+          <label><i class="fas fa-image"></i> Upload Image</label>
+          <input type="file" class="form-control" name="image" accept="image/*" required>
+        </div>
+
+        <!-- Amount -->
+        <div class="form-group">
+          <label><i class="fas fa-dollar-sign"></i> Amount</label>
+          <div class="currency-wrapper">
+            <i class="fas fa-dollar-sign"></i>
+            <input type="number" class="currency-input" name="amount" required min="1" placeholder="Enter amount">
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="button-group">
+          <button type="submit" class="btn btn-primary">✅ Add Service</button>
+          <button type="reset" class="btn btn-secondary">🔄 Reset</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Footer -->
+    {% include 'Hospital/footer.html' %}
+
+  </body>
+</html>

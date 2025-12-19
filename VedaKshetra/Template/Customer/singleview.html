@@ -1,0 +1,149 @@
+{% load static %}
+{% include 'Customer/header.html' %}
+
+<!-- Hospital Profile Section -->
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 col-sm-12">
+            <div class="card hospital-card shadow-lg">
+                <div class="card-body text-center">
+                    <!-- Hospital Title -->
+                    <h2 class="card-title text-primary fw-bold">🏥 {{ hospital.hospital_name }}</h2>
+                    <p class="text-muted">Providing quality healthcare services with trust & care</p>
+                    
+                    <!-- Hospital Image -->
+                    <div class="image-container mb-4">
+                        {% if hospital.image %}
+                            <img src="{{ hospital.image.url }}" alt="Hospital Image" class="hospital-image">
+                        {% else %}
+                            <span class="text-muted">No Image Available</span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Hospital Details -->
+                    <div class="hospital-details text-start">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong class="text-dark">📍 Address:</strong> {{ hospital.address }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong class="text-dark">📧 Email:</strong> {{ hospital.email }}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong class="text-dark">📞 Contact:</strong> {{ hospital.phone }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p>
+                                    <strong class="text-dark">🆔 ID Proof:</strong>
+                                    {% if hospital.idproof %}
+                                        <img src="{{ hospital.idproof.url }}" alt="ID Proof" class="id-proof-img">
+                                    {% else %}
+                                        <span class="text-muted">No ID Proof Available</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Button -->
+                    <div class="text-center mt-4">
+                        <a href="{% url 'packageview' hospital.hospital_id %}" class="btn btn-lg btn-gradient view-package-btn">
+                            <i class="fas fa-box"></i> View Packages
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'Customer/footer.html' %}
+
+<!-- Enhanced Styling -->
+<style>
+/* General Card Styling */
+.hospital-card {
+    border-radius: 20px;
+    background: #ffffff;
+    border: none;
+    box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.15);
+    padding: 35px;
+}
+
+/* Title Styling */
+.card-title {
+    font-size: 28px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+/* Hospital Image Styling */
+.image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hospital-image {
+    width: 100%;
+    max-width: 450px;
+    height: auto;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.hospital-image:hover {
+    transform: scale(1.05);
+}
+
+/* ID Proof Image */
+.id-proof-img {
+    width: 120px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Hospital Details */
+.hospital-details p {
+    font-size: 17px;
+    color: #444;
+    padding: 10px;
+    border-radius: 8px;
+    background: #f5f5f5;
+    margin-bottom: 10px;
+}
+
+/* View Package Button */
+.btn-gradient {
+    font-size: 18px;
+    padding: 12px 30px;
+    border-radius: 50px;
+    background: linear-gradient(45deg, #007bff, #00c6ff);
+    color: white;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+.btn-gradient:hover {
+    background: linear-gradient(45deg, #0056b3, #0099cc);
+    color: white;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .card-title {
+        font-size: 24px;
+    }
+    .hospital-image {
+        max-width: 100%;
+    }
+    .btn-gradient {
+        font-size: 16px;
+        padding: 10px 25px;
+    }
+}
+</style>

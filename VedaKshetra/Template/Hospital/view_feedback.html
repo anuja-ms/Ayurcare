@@ -1,0 +1,74 @@
+{% load static %}
+{% include 'Hospital/header.html' %}
+
+<div class="container py-5">
+    <h2 class="text-center mb-4 text-primary fw-bold">Customer Feedback</h2>
+
+    <div class="row">
+        {% for feedback in feedbacks %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">
+                        <i class="fas fa-user-circle"></i> {{ feedback.customer_id.customer_name }}
+                    </h5>
+                    <h6 class="text-muted">
+                        <i class="fas fa-box"></i> {{ feedback.package_id.package_name }}
+                    </h6>
+                    <div class="rating text-warning mb-2">
+                        <!-- Star Ratings -->
+                        {% for i in "12345"|make_list %}
+                            {% if forloop.counter <= feedback.rating %}
+                                <i class="fas fa-star"></i>
+                            {% else %}
+                                <i class="far fa-star"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <p class="card-text text-dark">
+                        <i class="fas fa-comment"></i> "{{ feedback.feedback }}"
+                    </p>
+                    <p class="text-muted mb-0">
+                        <i class="fas fa-calendar-alt"></i> {{ feedback.date|date:"d M Y" }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center">
+            <p class="text-muted fs-5">No feedback available</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% include 'Hospital/footer.html' %}
+
+<!-- Custom Styles -->
+<style>
+    .card {
+        border-radius: 10px;
+        transition: 0.3s;
+    }
+
+    .card:hover {
+        transform: scale(1.02);
+        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .rating i {
+        font-size: 16px;
+    }
+
+    .text-primary {
+        font-weight: bold;
+    }
+
+    .card-text {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+</style>
+
+<!-- FontAwesome Icons -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>

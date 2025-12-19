@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <title>VedaKshetra</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link href="{% static 'GuestPage/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="{% static 'GuestPage/css/style.css' %}" rel="stylesheet">
+    
+    <style>
+        /* Top Bar */
+        .topbar {
+            background-color: #333;
+            color: white;
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .topbar .contact-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 14px;
+        }
+
+        .topbar .contact-info i {
+            color: #4caf50;
+        }
+
+        .topbar .social-icons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .topbar .social-icons a {
+            color: white;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+
+        .topbar .social-icons a:hover {
+            color: #4caf50;
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: white;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-brand img {
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        .navbar-brand h1 {
+            font-size: 22px;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* Home Link */
+        .nav-home {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-home:hover {
+            color: #4caf50;
+        }
+
+        /* Dropdown Menu */
+        .menu-container {
+            position: relative;
+        }
+
+        .menu-btn {
+            font-size: 18px;
+            cursor: pointer;
+            color: #333;
+            background: none;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .menu-btn:hover {
+            color: #4caf50;
+        }
+
+        .menu-dropdown {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: white;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            width: 250px;
+            z-index: 1000;
+        }
+
+        .menu-dropdown a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            text-decoration: none;
+            color: #333;
+            border-bottom: 1px solid #f1f1f1;
+            transition: background 0.3s ease;
+        }
+
+        .menu-dropdown a:hover {
+            background: #4caf50;
+            color: white;
+        }
+
+        .menu-dropdown a:last-child {
+            border-bottom: none;
+        }
+
+        /* Icons Styling */
+        .menu-dropdown i {
+            font-size: 16px;
+            color: #4caf50;
+        }
+    </style>
+</head>
+
+<body onclick="closeMenu(event)">
+    <!-- Topbar Start -->
+    <div class="topbar">
+        <div class="contact-info">
+            <span><i class="fas fa-phone-alt"></i> +91 98 76 54 32 10</span>
+            <span><i class="far fa-envelope"></i> vedakshetra@example.com</span>
+        </div>
+        <div class="social-icons">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+    </div>
+    <!-- Topbar End -->
+
+    <!-- Navbar Start -->
+    <nav class="navbar">
+        <a href="{% url 'index1' %}" class="navbar-brand">
+            <img src="/images/login.jpg" alt="Logo">
+            <h1>VedaKshetra</h1>
+        </a>
+
+        <div class="nav-links">
+            <!-- Home Link (Outside Menu) -->
+            <a href="{% url 'index1' %}" class="nav-home">
+                <i class="fas fa-home"></i> Home
+            </a>
+
+            <!-- Menu Dropdown -->
+            <div class="menu-container">
+                <button class="menu-btn" onclick="toggleMenu(event)">
+                    <i class="fas fa-bars"></i> Menu
+                </button>
+                <div class="menu-dropdown" id="menuDropdown">
+                    <a href="{% url 'packageinsert' %}"><i class="fas fa-box"></i> Add Package</a>
+                    <a href="{% url 'serviceinsert' %}"><i class="fas fa-concierge-bell"></i> Add Service</a>
+                    <a href="{% url 'packageservice' %}"><i class="fas fa-link"></i> Assign Services</a>
+                    <a href="{% url 'viewpackage' %}"><i class="fas fa-eye"></i> View Packages</a>
+                    <a href="{% url 'viewservice' %}"><i class="fas fa-list"></i> View Services</a>
+                    <a href="{% url 'packageserviceview' %}"><i class="fas fa-cogs"></i> Package Services</a>
+                    <a href="{% url 'hospital_profile' %}"><i class="fas fa-user-md"></i> My Profile</a>
+                    <a href="{% url 'view_feedback' %}"><i class="fas fa-comments"></i> View Feedback</a>
+                    <a href="{% url 'manage_booking' %}"><i class="fas fa-calendar-check"></i> Manage Bookings</a>
+                    <a href="{% url 'payment_information' %}"><i class="fas fa-credit-card"></i> Payment Status</a>
+                    <a href="{% url 'login' %}"><i class="fas fa-sign-in-alt"></i> Login</a>
+                    <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- Navbar End -->
+
+    <!-- JavaScript for Dropdown Menu -->
+    <script>
+        function toggleMenu(event) {
+            event.stopPropagation();
+            var menu = document.getElementById("menuDropdown");
+            menu.style.display = (menu.style.display === "block") ? "none" : "block";
+        }
+
+        function closeMenu(event) {
+            var menu = document.getElementById("menuDropdown");
+            if (!event.target.closest('.menu-container')) {
+                menu.style.display = "none";
+            }
+        }
+    </script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

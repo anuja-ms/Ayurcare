@@ -1,0 +1,49 @@
+{% load static %}
+{% include 'Admin/header.html' %}
+
+<main id="main" class="main">
+    <div class="container-fluid d-flex justify-content-center align-items-center" style="height: 100vh; width:150vh; padding: 0 15px;">
+        <div class="row justify-content-center w-100">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow-lg">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4 class="card-title text-center mb-0" style="font-size: 22px; font-weight: 600;">District Registration</h4>
+                            <a href="{% url 'viewdistrict' %}" class="btn btn-outline-primary btn-sm">View Districts</a>
+                        </div>
+                        <p class="card-description text-center mb-4" style="font-size: 16px;">Please provide the necessary information</p>
+
+                        <form action="{% url 'district_process' %}" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            
+                            <div class="form-group mb-4">
+                                <label for="district_name" style="font-size: 16px; font-weight: 500;">District Name</label>
+                                <input type="text" class="form-control form-control-lg" id="district_name" name="disname" 
+                                    placeholder="Enter district name" required pattern="[A-Za-z\s]+" 
+                                    title="Only letters and spaces are allowed" style="height: 40px; font-size: 16px;">
+                            </div>
+
+                            <div class="d-flex justify-content-between mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg">Add District</button>
+                                <button type="reset" class="btn btn-light btn-lg">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<style>
+    .container-fluid { padding-left: 15px; padding-right: 15px; }
+    .card { width: 100%; max-width: 750px; margin: auto; }
+    .card-body { padding: 30px; }
+    .form-control-lg { height: 40px; font-size: 16px; }
+    .btn-lg { font-size: 16px; padding: 12px 25px; }
+    .d-flex button { margin-top: 15px; }
+    @media (max-width: 1200px) { .col-md-8 { max-width: 700px; } }
+    @media (max-width: 768px) { .col-md-8 { max-width: 100%; } }
+</style>
+</div>
+{% include 'Admin/footer.html' %}

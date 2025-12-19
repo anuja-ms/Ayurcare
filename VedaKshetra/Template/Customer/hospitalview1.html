@@ -1,0 +1,108 @@
+{% load static %}
+{% include 'Customer/header.html' %}
+
+<!-- Page Header Start -->
+<div class="container-fluid page-header py-5 mb-5 text-center d-flex align-items-center justify-content-center" 
+    style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3)), url('/images/th.jpg'); background-size: cover; background-position: center; height: 300px;">
+    <h1 class="display-4 text-white fw-bold">Find the Best Hospitals</h1>
+</div>
+<!-- Page Header End -->
+
+<!-- Hospital Selection Section -->
+<div class="container py-5">
+    <div class="text-center mb-4">
+        <h3 class="fw-bold text-dark">Choose Your Location</h3>
+        <p class="text-muted">Filter hospitals by district and location to find the best healthcare services.</p>
+    </div>
+    
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <select id="district" class="form-select rounded-pill border-2 border-primary py-2">
+                <option selected>Select District</option>
+                {% for d in district %}
+                <option value="{{ d.district_id }}">{{ d.district_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-4">
+            <select id="location" class="form-select rounded-pill border-2 border-primary py-2">
+                <option value="0">Select Location</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<!-- Hospital List -->
+<div class="container">
+    <div class="row g-4" id="hospital"></div>
+</div>
+
+{% include 'Customer/footer.html' %}
+
+<!-- jQuery & Bootstrap -->
+<script src="{% static 'Admin/jquery-3.7.1.min.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        $.ajaxSetup({ headers: { "X-CSRFToken": '{{ csrf_token }}' } });
+
+        $("#district").change(function () {
+            var district_id = $(this).val();
+            $('#location').html('<option value="0">Select Location</option>');
+            if (district_id) {
+                $.post('{% url "filllocation" %}', { did: district_id }, function (data) {
+                    $.each(data, function (key, val) {
+                        $('#location').append(`<option value="${val.location_id}">${val.location_name}</option>`);
+                    });
+                }, "json");
+            }
+        });
+
+        $('#location').change(function () {
+            var location_id = $(this).val();
+            $('#hospital').html('');
+            $.post('{% url "fillhospital" %}', { lid: location_id }, function (data) {
+                $.each(data, function (key, val) {
+                    let imageSrc = val.image ? `/images/${val.image}` : '/images/default.jpg';
+                    let singleviewurl = `{% url "singleview" 0 %}`.replace('0', val.hospital_id);
+                    let card = `
+                    <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
+                        <div class="card shadow-lg border-0 rounded overflow-hidden w-100">
+                            <img class="card-img-top" src="${imageSrc}" alt="Hospital Image" style="height: 250px; object-fit: cover;">
+                            <div class="card-body text-center d-flex flex-column justify-content-between">
+                                <h5 class="fw-bold text-primary">${val.hospital_name}</h5>
+                                <a href="${singleviewurl}" class="btn btn-primary rounded-pill px-4 mt-auto">View Details</a>
+                            </div>
+                        </div>
+                    </div>`;
+                    $('#hospital').append(card);
+                });
+            }, "json");
+        });
+    });
+</script>
+
+<style>
+    .form-select {
+        background-color: #f8f9fa;
+        border-radius: 50px;
+        transition: 0.3s;
+    }
+    .form-select:focus {
+        border-color: #007bff;
+        box-shadow: none;
+    }
+    .card {
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+    .card-img-top {
+        height: 250px;
+        object-fit: cover;
+    }
+</style>

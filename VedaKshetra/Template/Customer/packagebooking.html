@@ -1,0 +1,111 @@
+{% load static %}
+{% include 'Customer/header.html' %}
+
+<!-- Package Booking Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+            <p class="fs-5 fw-bold text-primary">Package Booking</p>
+            <h1 class="display-5 mb-4">Secure Your Healthcare Package Now</h1>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="bg-light rounded p-4 p-sm-5 shadow wow fadeInUp" data-wow-delay="0.1s">
+                    <form method="post" action="{% url 'insertbooking' package.package_id %}" onsubmit="return confirmBooking()">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            
+                            <!-- Customer Name -->
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control border-0" value="{{ cus.customer_name }}" id="name" name="customer_name" readonly>
+                                    <label for="name">Your Name</label>
+                                </div>
+                            </div>
+
+                            <!-- Package Name -->
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control border-0" id="package_name" value="{{ package.package_name }}" name="package_name" readonly>
+                                    <label for="package_name">Package Name</label>
+                                </div>
+                            </div>
+
+                            <!-- Amount -->
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control border-0" id="amount" value="{{ total_amount }}" name="amount" readonly>
+                                    <label for="amount">Total Amount</label>
+                                </div>
+                            </div>
+
+                            <!-- Required Date -->
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="date" class="form-control border-0" id="date" name="require_date" required>
+                                    <label for="date">Required Date</label>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="col-12 text-center">
+                                <button class="btn btn-success w-100 py-3" type="submit" name="btnbook">
+                                    <i class="fas fa-check-circle"></i> Book Now
+                                </button>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Package Booking End -->
+
+{% include 'Customer/footer.html' %}
+
+<!-- Custom Styling -->
+<style>
+    .form-control {
+        border-radius: 8px;
+    }
+
+    .shadow {
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-success {
+        background-color: #28a745 !important;
+        border: none;
+        transition: background-color 0.3s ease-in-out;
+    }
+
+    .btn-success:hover {
+        background-color: #218838 !important;
+    }
+</style>
+
+<!-- JavaScript Enhancements -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let today = new Date().toISOString().split("T")[0];
+        document.getElementById("date").setAttribute("min", today);
+    });
+
+    function confirmBooking() {
+        return confirm("Are you sure you want to book this package?");
+    }
+
+    {% if booking_success %}
+        window.onload = function() {
+            let toast = document.createElement("div");
+            toast.innerHTML = `
+                <div style="position: fixed; bottom: 20px; right: 20px; background: #28a745; color: white; padding: 15px; border-radius: 5px; z-index: 1000;">
+                    Booking Successful!
+                </div>`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        };
+    {% endif %}
+</script>

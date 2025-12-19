@@ -1,0 +1,86 @@
+{% load static %}
+{% include 'Customer/header.html' %}
+
+<div class="container mt-5">
+    <div class="text-center">
+        <h3 class="text-danger fw-bold">Cancellation Policy</h3>
+        <p class="text-muted">Understand the refund terms before proceeding with cancellation.</p>
+    </div>
+
+    <!-- Cancellation Policy Information -->
+    <div class="card shadow-sm border-0 rounded-3 mt-4 p-4 bg-light">
+        <h5 class="fw-bold text-danger"><i class="fas fa-info-circle"></i> Cancellation & Refund Policy</h5>
+        <ul class="mt-2">
+            <li>✔ Cancellations within <strong>24-48 hours</strong> of booking are eligible for a <strong>50% refund</strong> (after admin commission deduction).</li>
+            <li>❌ Cancellations made after this period are <strong>non-refundable</strong>.</li>
+            <li>💳 The refunded amount (if applicable) will be credited back to your original payment method within <strong>7-10 business days</strong>.</li>
+        </ul>
+    </div>
+
+    <div class="card shadow-lg border-0 rounded-3 mt-4 p-4">
+        <div class="card-body">
+            <!-- Booking Details -->
+            <h5 class="fw-bold text-primary mb-3"><i class="fas fa-file-invoice"></i> Booking Details</h5>
+            <table class="table table-bordered">
+                <tr>
+                    <th>Package Name</th>
+                    <td>{{ booking.package_id.package_name }}</td>
+                </tr>
+                <tr>
+                    <th>Booking Date</th>
+                    <td>{{ booking.booking_date }}</td>
+                </tr>
+                <tr>
+                    <th>Total Amount</th>
+                    <td>₹{{ booking.t_amount }}</td>
+                </tr>
+                <tr>
+                    <th>Paid Amount (1/4th)</th>
+                    <td>₹{{ paid_amount }}</td>
+                </tr>
+            </table>
+
+            <!-- Refund Details -->
+            <h5 class="fw-bold text-primary mt-4"><i class="fas fa-money-bill-wave"></i> Refund Details</h5>
+            <table class="table table-bordered">
+                <tr>
+                    <th>Refund Percentage</th>
+                    <td>{{ refund_percentage }}%</td>
+                </tr>
+                <tr>
+                    <th>Refund Amount</th>
+                    <td>₹{{ refund_amount }}</td>
+                </tr>
+            </table>
+
+            {% if refund_percentage == 0 %}
+            <div class="alert alert-warning d-flex align-items-center mt-3">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <strong>This booking is non-refundable as per our policy.</strong>
+            </div>
+            {% endif %}
+
+            <!-- Cancellation Form -->
+            <h5 class="fw-bold text-primary mt-4"><i class="fas fa-ban"></i> Confirm Cancellation</h5>
+            <form method="POST" action="{% url 'process_cancellation' booking.booking_id %}" class="mt-3">
+                {% csrf_token %}
+                <label for="reason" class="form-label">Select a cancellation reason:</label>
+                <select class="form-select" name="reason" required>
+                    <option value="">-- Select Reason --</option>
+                    <option value="Personal Reasons">Personal Reasons</option>
+                    <option value="Medical Emergency">Medical Emergency</option>
+                    <option value="Change of Plans">Change of Plans</option>
+                    <option value="Other">Other</option>
+                </select>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-danger px-4">
+                        <i class="fas fa-times-circle"></i> Confirm Cancellation
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% include 'Customer/footer.html' %}

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+<head>
+    <script src="{% static 'Admin/jquery-3.7.1.min.js' %}"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Package</title>
+
+    <!-- Google Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        /* Body Background */
+        body {
+            background-color: #f5f6fa;
+        }
+
+        /* Fixed Header */
+        .header-container {
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 600px;
+            margin: 100px auto 30px; /* Ensure space for the header */
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            transition: 0.3s;
+            text-align: center;
+        }
+        .main-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Title */
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2C3E50;
+            margin-bottom: 20px;
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            display: block;
+            margin-bottom: 6px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            font-size: 14px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            background: #f9fafb;
+            transition: 0.3s;
+        }
+        .form-control:focus {
+            border-color: #4CAF50;
+            outline: none;
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.2);
+        }
+
+        /* Error Message Styling */
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+            display: block;
+        }
+
+        /* Highlight Input Borders on Error */
+        .error-border {
+            border-color: red !important;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #388E3C;
+        }
+        .btn-secondary {
+            background: #ddd;
+            color: #333;
+        }
+        .btn-secondary:hover {
+            background: #bbb;
+        }
+
+        /* Centering Buttons */
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .main-content {
+                width: 90%;
+                padding: 25px;
+            }
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- FIXED HEADER -->
+    <div class="header-container">
+        {% include 'Hospital/header.html' %}
+    </div>
+    
+    <!-- Main Content -->
+    <br><br><br><br><br>
+    <div class="main-content">
+        <h3 class="title">📝 Add New Package</h3>
+
+        <form method="post" action="{% url 'packageinsert' %}" enctype="multipart/form-data" id="packageForm">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label><i class="fas fa-box"></i> Package Name</label>
+                <input type="text" class="form-control" name="package_name">
+                <span class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-image"></i> Upload Package Image</label>
+                <input type="file" class="form-control" name="image">
+                <span class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-calendar-day"></i> Number of Days</label>
+                <input type="number" class="form-control" name="noofdays">
+                <span class="error-message"></span>
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="btn btn-primary">✅ Add Package</button>
+                <button type="reset" class="btn btn-secondary">🔄 Reset</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- FOOTER -->
+    {% include 'Hospital/footer.html' %}
+
+    <script>
+        $(document).ready(function () {
+            $("#packageForm").submit(function (e) {
+                let isValid = true;
+
+                // Package Name Validation
+                let packageName = $("input[name='package_name']").val().trim();
+                if (packageName === "") {
+                    showError("package_name", "Package Name is required!");
+                    isValid = false;
+                } else {
+                    hideError("package_name");
+                }
+
+                // Image Validation
+                let image = $("input[name='image']").val();
+                let allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+                if (!image) {
+                    showError("image", "Please upload a package image!");
+                    isValid = false;
+                } else if (!allowedExtensions.exec(image)) {
+                    showError("image", "Only JPG, JPEG, PNG, or GIF files are allowed!");
+                    isValid = false;
+                } else {
+                    hideError("image");
+                }
+
+                // Number of Days Validation
+                let noOfDays = $("input[name='noofdays']").val();
+                if (!noOfDays || noOfDays <= 0) {
+                    showError("noofdays", "Enter a valid number of days!");
+                    isValid = false;
+                } else {
+                    hideError("noofdays");
+                }
+
+                if (!isValid) {
+                    e.preventDefault(); // Stop form submission if errors exist
+                }
+            });
+
+            function showError(inputName, message) {
+                let inputField = $("input[name='" + inputName + "']");
+                inputField.addClass("error-border");
+                inputField.next(".error-message").text(message);
+            }
+
+            function hideError(inputName) {
+                let inputField = $("input[name='" + inputName + "']");
+                inputField.removeClass("error-border");
+                inputField.next(".error-message").text("");
+            }
+        });
+    </script>
+
+</body>
+</html>

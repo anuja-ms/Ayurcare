@@ -1,0 +1,55 @@
+{% include 'customer/header.html' %}
+<main class="main">
+    <div class="container mt-5">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title text-center mb-4">Edit My Profile</h5>
+
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row">
+                        <!-- Profile Picture -->
+                        <div class="col-md-4 text-center mb-4">
+                            <img src="{{ customer.image.url }}" class="img-fluid rounded-circle" alt="Profile Image" width="150">
+                            <div class="form-group mt-3">
+                                <label for="id_image">Change Profile Image</label>
+                                <input type="file" name="image" id="id_image" class="form-control">
+                            </div>
+                        </div>
+
+                        <!-- Profile Details -->
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="id_customer_name">Name</label>
+                                <input type="text" name="customer_name" id="id_customer_name" class="form-control" value="{{ customer.customer_name }}" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="id_email">Email</label>
+                                <input type="email" name="email" id="id_email" class="form-control" value="{{ customer.email }}" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="id_phone">Phone</label>
+                                <input type="text" name="phone" id="id_phone" class="form-control" value="{{ customer.phone }}" pattern="[0-9]{10}" title="Enter a valid 10-digit phone number" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="id_address">Address</label>
+                                <textarea name="address" id="id_address" class="form-control" required>{{ customer.address }}</textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="id_idproof">Change ID Proof</label>
+                                <input type="file" name="idproof" id="id_idproof" class="form-control">
+                            </div>
+
+                            <button type="submit" class="btn btn-success btn-block mt-4">Save Changes</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+{% include 'customer/footer.html' %}

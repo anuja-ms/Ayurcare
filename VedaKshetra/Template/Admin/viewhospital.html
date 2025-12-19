@@ -1,0 +1,54 @@
+{% load static %}
+{% include 'Admin/header.html' %}
+
+<div class="col-lg-10 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Hospital Details</h4>
+            
+            <!-- District Table -->
+            <table class="table table-bordered table-hover">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Sl.no</th>
+                        <th>Hospital Name</th>
+                        <th>Id Proof</th>
+                        <th>Status</th>
+                        <th>View Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for h in hospital %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ h.hospital_name }}</td>
+                        <td>
+                            <img src="{{ h.idproof.url }}" alt="idproof" class="img-fluid rounded" width="60">
+                        </td>
+                        <td>
+                            <span class="badge 
+                            {% if h.login_id.status == 'Active' %}
+                                badge-success
+                            {% else %}
+                                badge-danger
+                            {% endif %}">
+                                {{ h.login_id.status }}
+                            </span>
+                        </td>
+                        <!-- View Details Button -->
+                        <td class="text-center">
+                            <a href="{% url 'singleview1' hospital_id=h.hospital_id %}" 
+                               onclick="return confirm('Do you want to see more details?')" 
+                               class="btn btn-primary btn-sm">
+                                <i class="fa fa-eye"></i> View more
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% include 'Admin/footer.html' %}

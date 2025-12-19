@@ -1,0 +1,141 @@
+{% load static %}
+{% include 'Admin/header.html' %}
+
+<div class="container py-5">
+    <h2 class="text-center mb-4 text-success fw-bold">CUSTOMER FEEDBACK</h2>
+
+    <!-- Hospital Selection -->
+    <div class="text-center mb-4">
+        <label for="hospitalSelect" class="fw-bold text-secondary">Select Hospital:</label>
+        <select id="hospitalSelect" class="form-select d-inline-block w-auto border-success">
+            <option value="" selected disabled>Choose Hospital</option>
+            {% for hospital in hospitals %}
+                <option value="{{ hospital.hospital_id }}" {% if selected_hospital.hospital_id == hospital.hospital_id %}selected{% endif %}>
+                    {{ hospital.hospital_name }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="row" id="feedbackContainer">
+        {% for feedback in feedbacks %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card feedback-card shadow-sm">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">
+                        <i class="fas fa-user-circle"></i> {{ feedback.customer_id.customer_name }}
+                    </h5>
+                    
+                    <!-- Hospital Name - BOLD -->
+                    <h6 class="fw-bold text-dark">
+                        <i class="fas fa-hospital"></i> {{ feedback.package_id.hospital_id.hospital_name }}
+                    </h6>
+
+                    <h6 class="text-success fw-bold">
+                        <i class="fas fa-box"></i> {{ feedback.package_id.package_name }}
+                    </h6>
+                    
+                    <!-- Star Rating -->
+                    <div class="rating mb-2">
+                        {% for i in "12345"|make_list %}
+                            {% if forloop.counter <= feedback.rating %}
+                                <i class="fas fa-star star-icon yellow-star"></i> <!-- Filled Star -->
+                            {% else %}
+                                <i class="far fa-star star-icon yellow-star"></i> <!-- Empty Star -->
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    <p class="card-text flex-grow-1">
+                        <i class="fas fa-comment"></i> "{{ feedback.feedback }}"
+                    </p>
+                    <p class="text-muted mb-0">
+                        <i class="fas fa-calendar-alt"></i> {{ feedback.date|date:"d M Y" }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center">
+            <p class="text-muted fs-5">No feedback available</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+</div>
+{% include 'Admin/footer.html' %}
+
+<!-- Custom Styles -->
+<style>
+    body {
+        background-color: #f6f4eb; /* Light beige for Ayurveda theme */
+    }
+
+    .feedback-card {
+        border-radius: 12px;
+        background: #fff7e6; /* Soft yellow */
+        border: 2px solid #4d7335; /* Ayurveda green */
+        transition: all 0.3s ease-in-out;
+        display: flex;
+        flex-direction: column;
+        height: 100%; /* Ensure all cards have the same height */
+        padding: 20px;
+    }
+
+    .feedback-card:hover {
+        transform: scale(1.02);
+        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .rating i {
+        font-size: 20px;
+        margin-right: 4px;
+    }
+
+    .yellow-star {
+        color: #FFD700 !important; /* Gold Yellow */
+    }
+
+    .card-title {
+        font-size: 20px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .card-text {
+        font-size: 16px;
+        line-height: 1.5;
+        color: #444;
+    }
+
+    .fw-bold {
+        font-weight: bold;
+    }
+
+    .form-select {
+        font-size: 16px;
+        padding: 6px 12px;
+        border-radius: 6px;
+    }
+
+    .text-success {
+        color: #4d7335 !important; /* Dark Ayurveda Green */
+    }
+
+    .text-muted {
+        font-size: 14px;
+    }
+</style>
+
+<!-- JavaScript to Handle Hospital Selection -->
+<script>
+    document.getElementById("hospitalSelect").addEventListener("change", function() {
+        var hospitalId = this.value;
+        if (hospitalId) {
+            window.location.href = "?hospital_id=" + hospitalId;
+        }
+    });
+</script>
+
+<!-- FontAwesome Icons -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js" crossorigin="anonymous"></script>

@@ -1,0 +1,136 @@
+{% load static %}
+{% include 'Admin/header.html' %}
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 col-sm-12">
+            <div class="card shadow-lg border-0 mt-4">
+                <div class="card-body">
+                    <h4 class="card-title text-center mb-3 text-primary">🏥 Hospital Details</h4>
+                    <p class="text-muted text-center mb-4">Please review the hospital details before approval.</p>
+
+                    <div class="hospital-info">
+                        <h5 class="fw-bold text-dark mb-3">{{ hospital.hospital_name }}</h5>
+
+                        <!-- ID Proof -->
+                        <div class="mb-3">
+                            <strong class="text-dark">ID Proof: </strong>
+                            {% if hospital.idproof %}
+                                <img src="{{ hospital.idproof.url }}" alt="ID Proof" class="preview-img img-fluid">
+                            {% else %}
+                                <span class="text-muted">No ID Proof Available</span>
+                            {% endif %}
+                        </div>
+
+                        <!-- Status -->
+                        <div class="mb-3">
+                            <strong class="text-dark">Status: </strong>
+                            <span class="badge {% if hospital.login_id.status == 'Active' %}bg-success{% else %}bg-danger{% endif %} text-white">
+                                {{ hospital.login_id.status }}
+                            </span>
+                        </div>
+
+                        <!-- Address, Email & Phone -->
+                        <div class="info-box"><strong>📍 Address:</strong> {{ hospital.address }}</div>
+                        <div class="info-box"><strong>📧 Email:</strong> {{ hospital.email }}</div>
+                        <div class="info-box"><strong>📞 Contact:</strong> {{ hospital.phone }}</div>
+
+                        <!-- Hospital Image -->
+                        <div class="mb-3">
+                            <strong class="text-dark">🏥 Hospital Image: </strong>
+                            {% if hospital.image %}
+                                <img src="{{ hospital.image.url }}" alt="Hospital Image" class="preview-img img-fluid">
+                            {% else %}
+                                <span class="text-muted">No Image Available</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex justify-content-center gap-3 mt-4">
+                        <a href="{% url 'accept_hospital' hospital_id=hospital.login_id_id %}" 
+                           onclick="return confirm('Do you want to Accept?')" 
+                           class="btn btn-lg btn-success btn-shadow">
+                            ✅ Accept
+                        </a>
+                        <a href="{% url 'reject_hospital' hospital_id=hospital.login_id_id %}" 
+                           onclick="return confirm('Do you want to Reject?')" 
+                           class="btn btn-lg btn-danger btn-shadow">
+                            ❌ Reject
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+{% include 'Admin/footer.html' %}
+
+<!-- Custom Styling -->
+<style>
+/* General Styling */
+body {
+    background-color: #f8f9fa;
+}
+
+/* Card Design */
+.card {
+    border-radius: 12px;
+    background-color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Card Title */
+.card-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #007bff;
+}
+
+/* Info Box */
+.info-box {
+    background: #f8f9fa;
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #444;
+    border-left: 5px solid #007bff;
+}
+
+/* Image Styling */
+.preview-img {
+    width: 150px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out;
+}
+
+.preview-img:hover {
+    transform: scale(1.08);
+}
+
+/* Button Styling */
+.btn-lg {
+    font-size: 18px;
+    padding: 12px 30px;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+}
+
+.btn-shadow {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .btn-lg {
+        font-size: 16px;
+        padding: 10px 20px;
+    }
+}
+</style>
